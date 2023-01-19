@@ -172,23 +172,25 @@ app.post("/login", async (req, res) => {
           process.env.REFRESH_TOKEN_SECRET,
           { expiresIn: "1d" }
         );
-
-        if (cookies && cookies['jwt']) {
-          const refreshToken = cookies['jwt'];
-          
-          const foundToken = await checkRefreshToken(refreshToken);//problem with sault?, when compared
-          
-          //Detected refresh token reuse!
-          if (!foundToken) {
-            console.log('attempted refresh token reuse at login');//?
-          }
+        
+        if (cookies != undefined) {
+          if (cookies['jwt']) {
+            //const refreshToken = cookies['jwt'];
             
-          res.clearCookie("jwt", { 
-            httpOnly: true, 
-            sameSite: false, //in production mode maybe true ?
-            //sameSite: 'none', //in production -> strict
-          //secure: true, //in production only service on https
-          });
+            //const foundToken = await checkRefreshToken(refreshToken);//problem with sault?, when compared
+            
+            //Detected refresh token reuse!
+            // if (!foundToken) {
+            //   console.log('attempted refresh token reuse at login');//?
+            // }
+              
+            res.clearCookie("jwt", { 
+              httpOnly: true, 
+              sameSite: false, //in production mode maybe true ?
+              //sameSite: 'none', //in production -> strict
+            //secure: true, //in production only service on https
+            });
+          }
         }
 
         updateRefreshToken(user1.id, newRefreshToken);
