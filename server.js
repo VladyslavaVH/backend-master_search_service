@@ -173,17 +173,14 @@ app.post("/login", async (req, res) => {
           { expiresIn: "1d" }
         );
 
-        if (cookies['jwt'] != 0 || cookies['jwt'] != undefined) {
-          console.log('refresh token', cookies['jwt']);
+        if (cookies && cookies['jwt']) {
           const refreshToken = cookies['jwt'];
-
-          if (refreshToken) {            
-            const foundToken = await checkRefreshToken(refreshToken);//problem with sault?, when compared
-            
-            //Detected refresh token reuse!
-            if (!foundToken) {
-              console.log('attempted refresh token reuse at login');//?
-            }
+          
+          const foundToken = await checkRefreshToken(refreshToken);//problem with sault?, when compared
+          
+          //Detected refresh token reuse!
+          if (!foundToken) {
+            console.log('attempted refresh token reuse at login');//?
           }
             
           res.clearCookie("jwt", { 
