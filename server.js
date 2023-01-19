@@ -173,8 +173,8 @@ app.post("/login", async (req, res) => {
           { expiresIn: "1d" }
         );
 
-        if (cookies.jwt) {
-          const refreshToken = cookies.jwt;
+        if (cookies['jwt']) {
+          const refreshToken = cookies['jwt'];
 
           const foundToken = await checkRefreshToken(refreshToken);//problem with sault?, when compared
 
