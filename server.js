@@ -174,15 +174,18 @@ app.post("/login", async (req, res) => {
         );
 
         if (cookies['jwt']) {
+          console.log('refresh token', cookies['jwt']);
           const refreshToken = cookies['jwt'];
 
-          const foundToken = await checkRefreshToken(refreshToken);//problem with sault?, when compared
-
-          //Detected refresh token reuse!
-          if (!foundToken) {
-            console.log('attempted refresh token reuse at login');//?
+          if (refreshToken) {            
+            const foundToken = await checkRefreshToken(refreshToken);//problem with sault?, when compared
+            
+            //Detected refresh token reuse!
+            if (!foundToken) {
+              console.log('attempted refresh token reuse at login');//?
+            }
           }
-
+            
           res.clearCookie("jwt", { 
             httpOnly: true, 
             sameSite: false, //in production mode maybe true ?
