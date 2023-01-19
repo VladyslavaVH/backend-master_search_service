@@ -173,7 +173,7 @@ app.post("/login", async (req, res) => {
           { expiresIn: "1d" }
         );
 
-        if (cookies['jwt']) {
+        if (cookies['jwt'] != 0 || cookies['jwt'] != undefined) {
           console.log('refresh token', cookies['jwt']);
           const refreshToken = cookies['jwt'];
 
