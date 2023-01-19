@@ -173,7 +173,7 @@ app.post("/login", async (req, res) => {
           { expiresIn: "1d" }
         );
 
-        if (cookies?.jwt) {
+        if (cookies.jwt) {
           const refreshToken = cookies.jwt;
 
           const foundToken = await checkRefreshToken(refreshToken);//problem with sault?, when compared
@@ -245,9 +245,9 @@ app.get("/refresh", async (req, res) => {
     }
 
     if (err 
-      || (foundUser?.id !== decoded?.userInfo?.user?.id) 
-      || (foundUser?.firstName !== decoded?.userInfo?.user?.firstName) 
-      || (foundUser?.lastName !== decoded?.userInfo?.user?.lastName)) 
+      || (foundUser.id !== decoded.userInfo.user.id) 
+      || (foundUser.firstName !== decoded.userInfo.user.firstName) 
+      || (foundUser.lastName !== decoded.userInfo.user.lastName)) 
       return res.sendStatus(403);
     
     //Refresh token was still valid
@@ -307,7 +307,7 @@ app.get("/refresh", async (req, res) => {
 });
 
 app.delete("/logout", async (req, res) => {
-  const refreshToken = req?.cookies["jwt"];
+  const refreshToken = req.cookies["jwt"];
   if (!refreshToken) return res.sendStatus(204); //No content
 
   //Is refresh token in db?
