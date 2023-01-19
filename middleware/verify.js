@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 function verifyJWT (req, res, next) {
     const authHeader = req.headers.authorization || req.headers.Authorization;
-    if (!authHeader?.startsWith('Bearer ')) return res.sendStatus(401);
+    if (!authHeader.startsWith('Bearer ')) return res.sendStatus(401);
   
     const token = authHeader && authHeader.split(" ")[1];
     if (!token) return res.sendStatus(401);
@@ -17,7 +17,7 @@ function verifyJWT (req, res, next) {
 
 function verifyRole(role) {
     return (req, res, next) => {
-      if (!req?.role) return res.sendStatus(401); //Unauthorized
+      if (!req.role) return res.sendStatus(401); //Unauthorized
     
       if (req.role !== role) return res.sendStatus(401); //Invalid role, not allowed
     

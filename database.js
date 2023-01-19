@@ -63,7 +63,7 @@ export async function checkRefreshToken(token) {
     FROM users 
     WHERE refreshToken = ?`, [token]);
 
-    return result?.refreshToken;
+    return result.refreshToken;
 }
 
 export async function createDefaultMaster(firstName, lastName, phone, password, roleFK = process.env.MASTER_ROLE_FK) {
