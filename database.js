@@ -1,15 +1,5 @@
-import dotenv from 'dotenv';
-import mysql from 'mysql2';
 import bcrypt from 'bcrypt';
-
-dotenv.config();
-
-const pool = mysql.createPool({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE
-}).promise();
+import pool from './config/dbConfig.js';
 
 export async function createCategory(name, description, isPopular) {
     const result = await pool.query(`
@@ -18,7 +8,7 @@ export async function createCategory(name, description, isPopular) {
     `, [name, description, isPopular]);
 
     return result;
-};
+}; 
 
 export async function createUser(firstName, lastName, phone, password, roleFK = process.env.CLIENT_ROLE_FK) {
     const [result] = await pool.query(`
