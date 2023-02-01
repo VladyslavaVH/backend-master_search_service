@@ -136,12 +136,14 @@ io.on('connection', socket => {
     console.log('inside sendMessage');
     console.log(senderFK, receiverFK, message, avatar);
     const user = getUser(receiverFK);
-    io.to(user?.socketId).emit('getMessage', {
-      senderFK,
-      receiverFK,
-      message,
-      avatar
-    })
+    if (user.socketId) {
+      io.to(user.socketId).emit('getMessage', {
+        senderFK,
+        receiverFK,
+        message,
+        avatar
+      })
+    }
   });
 
   //disconnect
