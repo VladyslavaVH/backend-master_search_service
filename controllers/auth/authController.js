@@ -74,19 +74,19 @@ const login = async (req, res) => {
               masterInfo: role === ROLE.MASTER
               ? {
                   categories: user1.categories,
-                  tagLine: user1?.masterData?.tagLine,
-                  description: user1?.masterData?.description,
-                  location: (user1?.masterData?.lat && user1?.masterData?.lng)
+                  tagLine: user1.masterData.tagLine,
+                  description: user1.masterData.description,
+                  location: (user1.masterData.lat && user1.masterData.lng)
                   ? {
-                      lat: user1?.masterData?.lat,
-                      lng: user1?.masterData?.lng
+                      lat: user1.masterData.lat,
+                      lng: user1.masterData.lng
                     }
                   : null,
-                  nationality: user1?.masterData?.id 
+                  nationality: user1.masterData.id 
                   ? {
-                    id: user1?.masterData?.id,
-                    country: user1?.masterData?.country,
-                    flag: user1?.masterData?.flag,
+                    id: user1.masterData.id,
+                    country: user1.masterData.country,
+                    flag: user1.masterData.flag,
                   }
                   : null,
                 }
@@ -113,19 +113,19 @@ const login = async (req, res) => {
               masterInfo: role === ROLE.MASTER
               ? {
                   categories: user1.categories,
-                  tagLine: user1?.masterData?.tagLine,
-                  description: user1?.masterData?.description,
-                  location: (user1?.masterData?.lat && user1?.masterData?.lng)
+                  tagLine: user1.masterData.tagLine,
+                  description: user1.masterData.description,
+                  location: (user1.masterData.lat && user1.masterData.lng)
                   ? {
-                      lat: user1?.masterData?.lat,
-                      lng: user1?.masterData?.lng
+                      lat: user1.masterData.lat,
+                      lng: user1.masterData.lng
                     }
                   : null,
-                  nationality: user1?.masterData?.id 
+                  nationality: user1.masterData.id 
                   ? {
-                    id: user1?.masterData?.id,
-                    country: user1?.masterData?.country,
-                    flag: user1?.masterData?.flag,
+                    id: user1.masterData.id,
+                    country: user1.masterData.country,
+                    flag: user1.masterData.flag,
                   }
                   : null,
                 }
@@ -243,20 +243,20 @@ const refresh = async (req, res) => {
             isEmailVerified: decoded.userInfo.user.isEmailVerified,
             masterInfo: role === ROLE.MASTER
             ? {
-                categories: foundUser?.categories,
-                tagLine: foundUser?.masterData?.tagLine,
-                description: foundUser?.masterData?.description,
-                location: (foundUser?.masterData?.lat && user1?.masterData?.lng)
+                categories: foundUser.categories,
+                tagLine: foundUser.masterData.tagLine,
+                description: foundUser.masterData.description,
+                location: (foundUser.masterData.lat && user1.masterData.lng)
                 ? {
-                    lat: foundUser?.masterData?.lat,
-                    lng: foundUser?.masterData?.lng
+                    lat: foundUser.masterData.lat,
+                    lng: foundUser.masterData.lng
                   }
                 : null,
-                nationality: foundUser?.masterData?.id 
+                nationality: foundUser.masterData.id 
                 ? {
-                  id: foundUser?.masterData?.id,
-                  country: foundUser?.masterData?.country,
-                  flag: foundUser?.masterData?.flag,
+                  id: foundUser.masterData.id,
+                  country: foundUser.masterData.country,
+                  flag: foundUser.masterData.flag,
                 }
                 : null,
               }
@@ -282,20 +282,20 @@ const refresh = async (req, res) => {
             isEmailVerified: foundUser.isEmailVerified,
             masterInfo: role === ROLE.MASTER
             ? {
-                categories: foundUser?.categories,
-                tagLine: foundUser?.masterData?.tagLine,
-                description: foundUser?.masterData?.description,
-                location: (foundUser?.masterData?.lat && user1?.masterData?.lng)
+                categories: foundUser.categories,
+                tagLine: foundUser.masterData.tagLine,
+                description: foundUser.masterData.description,
+                location: (foundUser.masterData.lat && user1.masterData.lng)
                 ? {
-                    lat: foundUser?.masterData?.lat,
-                    lng: foundUser?.masterData?.lng
+                    lat: foundUser.masterData.lat,
+                    lng: foundUser.masterData.lng
                   }
                 : null,
-                nationality: foundUser?.masterData?.id 
+                nationality: foundUser.masterData.id 
                 ? {
-                  id: foundUser?.masterData?.id,
-                  country: foundUser?.masterData?.country,
-                  flag: foundUser?.masterData?.flag,
+                  id: foundUser.masterData.id,
+                  country: foundUser.masterData.country,
+                  flag: foundUser.masterData.flag,
                 }
                 : null,
               }

@@ -121,7 +121,7 @@ export async function getUserByRefreshToken(refreshToken) {
     FROM users 
     WHERE refreshToken = ?`, [refreshToken])
     .then(async ([[ user ]]) => {
-        if (user?.role === ROLE.MASTER) {
+        if (user.role === ROLE.MASTER) {
             const masterData = await getMasterData(user.id);
             const categories = await getMasterCategories(user.id);
             return {
