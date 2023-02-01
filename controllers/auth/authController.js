@@ -10,7 +10,7 @@ import {
   getUserByRefreshToken
 } from './authDbFunctions.js';
 
-console.log(await bcrypt.hash('admin', 10));
+//console.log(await bcrypt.hash('admin', 10));
 
 import dotenv from "dotenv";
 import ROLE from './../../config/roles.js';
