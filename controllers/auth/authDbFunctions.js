@@ -2,31 +2,41 @@ import pool from "../../config/dbConfig.js";
 import ROLE from "../../config/roles.js";
 
 export async function createUser(firstName, lastName, phone, password, roleFK = process.env.CLIENT_ROLE_FK) {
-    const [result] = await pool.query(`
-    INSERT INTO users (firstName, lastName, phone, password, roleFK)
-    VALUES (?, ?, ?, ?, ?)
-    `, [firstName, lastName, phone, password, roleFK]);
+    const [{ insertId }] = await pool.query(`
+    INSERT INTO users (firstName, lastName, phone, isPhoneVerified, password, roleFK)
+    VALUES (?, ?, ?, ?, ?, ?)
+    `, [firstName, lastName, phone, true, password, roleFK]);
 
-    return result;
+    return insertId;
 };
 
 export async function createDefaultMaster(firstName, lastName, phone, password, roleFK = process.env.MASTER_ROLE_FK) {
-    await createUser(firstName, lastName, phone, password, roleFK)
-    .then(async ({ insertId }) => {
+    const id = await createUser(firstName, lastName, phone, password, roleFK)
+    .then(async insertId => {
         const [result] = await pool.query(`
         INSERT INTO masters (user_id)
         VALUES (?)
         `, [insertId]);
 
-        return result;
+        if (result) {
+            return insertId;
+        }
     })
-    .then(async ({ insertId }) => {
-        await pool.query(`
+    .then(async insertId => {
+        const [res] = await pool.query(`
         INSERT INTO masters_documents (user_id)
         VALUES (?)
         `, [insertId]);
-    }).then(() => console.log('Success'));
+
+        if (res) {            
+            return insertId;
+        }
+    });
+    
+    return id;
 };
+
+//console.log(await createDefaultMaster('firstName', 'lastName', '+380...', 'password'));
 
 export async function findUser(id) {
     const res = await pool.query(`
@@ -36,6 +46,8 @@ export async function findUser(id) {
     WHERE users.id = ?
     `, [id])
     .then(async ([[ user ]]) => {
+        if (!user) return undefined;
+
         if (user.role === ROLE.MASTER) {
             const masterData = await getMasterData(user.id);
             const categories = await getMasterCategories(user.id);
@@ -81,6 +93,8 @@ export async function findUserByPhone(phone) {
     WHERE phone = ?
     `, [phone])
     .then(async ([[ user ]]) => {
+        if (!user) return undefined;
+        
         if (user.role === ROLE.MASTER) {
             const masterData = await getMasterData(user.id);
             const categories = await getMasterCategories(user.id);
@@ -121,6 +135,8 @@ export async function getUserByRefreshToken(refreshToken) {
     FROM users 
     WHERE refreshToken = ?`, [refreshToken])
     .then(async ([[ user ]]) => {
+        if(!user) return undefined;
+
         if (user.role === ROLE.MASTER) {
             const masterData = await getMasterData(user.id);
             const categories = await getMasterCategories(user.id);

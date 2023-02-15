@@ -28,7 +28,7 @@ const changeAvatar = async (req, res) => {
       return res.sendStatus(400);
     } else {
       Object.keys(req.files).forEach(key => {
-        const filepath = path.join(__dirname, '../client/public/profilePhotos', req.files[key].name);
+        const filepath = path.join(__dirname, process.env.PROFILE_PHOTOS_PATH, req.files[key].name);
         
         req.files[key].mv(filepath, err => {
           if (err) {

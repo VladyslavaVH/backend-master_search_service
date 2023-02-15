@@ -26,7 +26,7 @@ const createJob = async (req, res) => {
       Object.keys(photos).forEach((key) => {
         const filepath = path.join(
           __dirname,
-          "../client/public/jobPhotos",
+          process.env.JOB_PHOTOS_PATH,
           photos[key].name
         );
 
@@ -45,12 +45,12 @@ const createJob = async (req, res) => {
     const jobData = req.body;
     createJobDB(
       jobData.clientFK,
-      jobData.title,
       jobData.categoryFK,
       jobData.lat,
       jobData.lng,
       jobData.minPayment,
       jobData.maxPayment,
+      jobData.currencyFK,
       jobData.jobDateTime,
       jobData.description,
       photosNameArr
@@ -67,7 +67,7 @@ const deleteJob = async (req, res) => {
   let filepath = "";
   if (photos && photos.length > 0) {
     for (const p of photos) {
-      filepath = path.join(__dirname, "../../../client/public/jobPhotos", p.photo);
+      filepath = path.join(__dirname, process.env.JOB_PHOTOS_PATH, p.photo);
       fs.unlinkSync(filepath, (err) => {
         if (err) {
           console.log(err);

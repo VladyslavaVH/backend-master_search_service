@@ -2,10 +2,11 @@ import pool from "../../config/dbConfig.js";
 
 export async function getJobById(id) {
     const [[result]] = await pool.query(`
-    select jobs.id, jobs_candidates.status as 'isMasterConfirmed', title, users.firstName, users.lastName, isPhoneVerified as 'isVerified', minPayment, maxPayment, jobs.description, lat, lng, categories.name as 'category', jobs.createTime
+    select jobs.id, jobs_candidates.status as 'isMasterConfirmed', users.firstName, users.lastName, isPhoneVerified as 'isVerified', minPayment, maxPayment, currencies.name as 'currency', jobs.description, lat, lng, categories.name as 'category', jobs.createTime
     from jobs
     join categories on jobs.categoryFK = categories.id
     join users on jobs.clientFK = users.id
+    join currencies on jobs.currencyFK = currencies.id
     left join jobs_candidates on jobs_candidates.jobFK = jobs.id
     where jobs.id = ?;`, [id]);
 

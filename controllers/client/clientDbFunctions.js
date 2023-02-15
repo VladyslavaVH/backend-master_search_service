@@ -2,8 +2,9 @@ import pool from "../../config/dbConfig.js";
 
 export async function getJobListingByClient(id) {
     const [jobs] = await pool.query(`
-    SELECT *
+    SELECT jobs.*, categories.name as 'category'
     FROM jobs
+    JOIN categories on jobs.categoryFK = categories.id
     WHERE jobs.clientFK = ? 
     AND jobs.isDone = false
     ORDER BY (jobDateTime) desc;`, [id]);

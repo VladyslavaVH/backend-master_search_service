@@ -1,9 +1,9 @@
 import pool from "../../config/dbConfig.js";
 
-export async function getJobsMastersCountDB() {
-    const [[[result]]] = await pool.query(`call getJobsMastersCount()`, []);
+export async function getHomePageStatisticsDB() {
+    const [[[result]]] = await pool.query(`call getHomePageStatistics()`, []);
 
-    return result || { jobsCount: 0, mastersCount: 0 };
+    return result || { jobsCount: 0, mastersCount: 0, usersCount: 0 };
 };
 
 export async function getPopularCategoriesDB() {
@@ -16,6 +16,14 @@ export async function getOptionCategoriesDB() {
     const [categories] = await pool.query(`
     select id, name as 'category'
     from categories;`, []);
+
+    return categories || [];
+};
+
+export async function getOptionCurrenciesDB() {
+    const [categories] = await pool.query(`
+    select id, name as 'currency'
+    from currencies;`, []);
 
     return categories || [];
 };

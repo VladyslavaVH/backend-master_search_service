@@ -20,7 +20,7 @@ export async function getMasterById(id) {
 
 export async function getCommentsByMasterId(id) {
     const [comments] = await pool.query(`
-    select job_id as 'id', jobs.title, job_comments.tagLine, rating, comment, job_comments.createTime
+    select job_id as 'id', job_comments.tagLine, rating, comment, job_comments.createTime
     from jobs_candidates
     join jobs on jobs_candidates.jobFK = jobs.id
     join job_comments on job_comments.job_id = jobs.id

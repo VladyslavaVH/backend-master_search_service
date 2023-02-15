@@ -9,11 +9,11 @@ export async function insertJobPhoto(path, jobFK) {
     return result;
 }
 
-export async function createJobDB(clientFK, title, categoryFK, lat, lng, minPayment, maxPayment, jobDateTime, description, files, qrCode = null ) {
+export async function createJobDB(clientFK, categoryFK, lat, lng, minPayment, maxPayment, currencyFK, jobDateTime, description, files, qrCode = null ) {
     await pool.query(`
-    INSERT INTO jobs (clientFK, title, lat, lng, categoryFK, minPayment, maxPayment, jobDateTime, description, qrCode)
+    INSERT INTO jobs (clientFK, lat, lng, categoryFK, minPayment, maxPayment, currencyFK, jobDateTime, description, qrCode)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [clientFK, title, lat, lng, categoryFK, minPayment, maxPayment, jobDateTime, description, qrCode])
+    `, [clientFK, lat, lng, categoryFK, minPayment, maxPayment, currencyFK, jobDateTime, description, qrCode])
     .then(([{ insertId }]) => {
         for (const path of files) {
             insertJobPhoto(path, insertId);

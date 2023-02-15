@@ -1,15 +1,16 @@
 import fs from 'fs';
 import { 
-    getJobsMastersCountDB,
+    getHomePageStatisticsDB,
     getPopularCategoriesDB,
     getOptionCategoriesDB,
+    getOptionCurrenciesDB,
     getRecentJobsDB,
     getHighestRatedMastersDB,
     getAllMastersDB,
 } from './publicDbFunctions.js';
 
-const getJobsMastersCount = async (req, res) => {
-    res.status(200).send(await getJobsMastersCountDB() || { jobsCount: 0, mastersCount: 0 });
+const getHomePageStatistics = async (req, res) => {
+    res.status(200).send(await getHomePageStatisticsDB() || { jobsCount: 0, mastersCount: 0, usersCount: 0 });
 };
 
 const getPopularCategories = async (req, res) => {
@@ -18,6 +19,10 @@ const getPopularCategories = async (req, res) => {
 
 const getOptionCategories = async (req, res) => {
     res.status(200).send(await getOptionCategoriesDB() || []);
+};
+
+const getOptionCurrencies = async (req, res) => {
+    res.status(200).send(await getOptionCurrenciesDB() || []);
 };
 
 const getRecentJobs = async (req, res) => {
@@ -37,9 +42,10 @@ const getFaqs = async (req, res) => {
 };
 
 export default {
-    getJobsMastersCount,
+    getHomePageStatistics,
     getPopularCategories,
     getOptionCategories,
+    getOptionCurrencies,
     getRecentJobs,
     getJobsMastersHighestRated,
     getAllMasters,
