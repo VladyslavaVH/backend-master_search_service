@@ -2,6 +2,7 @@ import {
   getMasterStatisticsDB,
   getAllMasterConversationsDB,
   applyJobDB,
+  changeProfileSettingsDB,
   checkJobDB
 } from './masterDbFunctions.js';
 
@@ -22,6 +23,17 @@ const applyJob = async (req, res) => {
   }  
 }
 
+const changeProfileSettings = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { masterCategories, newTagLine, newDescription } = req.body;
+    res.status(200).send(await changeProfileSettingsDB(req.user.id, masterCategories, newTagLine, newDescription) || {});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }  
+}
+
 const checkJob = async (req, res) => {
   try {
     res.status(200).send(await checkJobDB(req.query.jobId, req.user.id) || {});
@@ -35,5 +47,6 @@ export default {
   getMasterStatistics,
   getAllMasterConversations,
   applyJob,
+  changeProfileSettings,
   checkJob
 };

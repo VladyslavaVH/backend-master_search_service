@@ -55,7 +55,58 @@ export async function getAllClientConversationsDB(id) {
     and jobs.clientFK = ?;
     `, [id]);
 
-    return conversations || [];
+    const [allSortedClientConv] = await pool.query(`
+    select senderFK, receiverFK, message, create_time
+    from user_messages
+    join messages on messageFK = messages.id
+    where senderFK = ? or receiverFK = ?
+    order by messages.create_time desc;
+    `, [id, id]);
+
+    let sortedClientConv = [];
+
+    for (const all of allSortedClientConv) {
+        for (const c of conversations) {
+            if ((all.senderFK == c.id) || (all.receiverFK == c.id)) {
+                let isDublicate = false;
+
+                for (const s of sortedClientConv) {
+                    if ((all.senderFK == s.id) || (all.receiverFK == s.id)) {
+                        isDublicate = true;
+                        break;
+                    }
+                }
+
+                if (!isDublicate) {
+                    sortedClientConv.push(c);                    
+                }
+            }
+        }
+
+        if (sortedClientConv.length === conversations.length) {
+            break;
+        }
+    }
+    
+    let endArray = [];
+
+    let isDublicate = false;
+    for (const other of conversations) {
+        isDublicate = false;
+        for (const sorted of sortedClientConv) {
+            if (other.id === sorted.id ) {
+                isDublicate = true;
+            }
+        }
+
+        if (!isDublicate) {
+            endArray.push(other);
+        }
+    }
+
+    sortedClientConv = [ ...sortedClientConv, ...endArray ];
+
+    return sortedClientConv || [];
 }
 
 export async function deleteJobCandidate(jobId, masterId) {

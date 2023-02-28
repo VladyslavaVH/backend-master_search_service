@@ -10,7 +10,7 @@ import {
 } from './publicDbFunctions.js';
 
 const getHomePageStatistics = async (req, res) => {
-    res.status(200).send(await getHomePageStatisticsDB() || { jobsCount: 0, mastersCount: 0, usersCount: 0 });
+    res.status(200).send(await getHomePageStatisticsDB() || { jobsCount: 0, usersCount: 0 });
 };
 
 const getPopularCategories = async (req, res) => {

@@ -11,6 +11,9 @@ router.route('/statistics', verifyRole(ROLE.MASTER))
 router.route('/apply', verifyRole(ROLE.MASTER))
 .put(masterController.applyJob);
 
+router.route('/change/profile/settings', verifyRole(ROLE.MASTER))
+.post(masterController.changeProfileSettings);
+
 router.route('/check/job/apply', verifyRole(ROLE.MASTER))
 .get(masterController.checkJob);
 

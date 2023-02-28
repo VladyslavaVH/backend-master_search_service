@@ -90,6 +90,14 @@ const sendUser = (userId, socketId) => {
     users.push({userId, socketId});
 };
 
+const checkUserStatus = userId => {
+  if (users.find(user => user.userId === userId)) {
+    return userId;
+  } else {
+    return null;
+  }
+};
+
 const removeUser = (socketId) => {
   users = users.filter(user => user.socketId !== socketId);
 }
@@ -106,12 +114,24 @@ io.on('connection', socket => {
   socket.on('sendUser', userId => {
     sendUser(userId, socket.id);
     io.emit('getUsers', users);
+    console.log(users);
   })
+
+  socket.on('checkUserStatus', userId => {
+    io.emit('isOnline', checkUserStatus(userId));
+  });
+
+  socket.on('typing', ({ receiverId, typing }) => {
+    const user = getUser(receiverId);
+    if (user) {
+      if (user.socketId) {
+        io.to(user.socketId).emit("displayTyping", typing);
+      }
+    } else console.log('typing: user is undefined');
+  });
 
   //send and get message 
   socket.on('sendMessage', ({ senderFK, receiverFK, message, avatar }) => {
-    console.log('inside sendMessage');
-    console.log(senderFK, receiverFK, message, avatar);
     const user = getUser(receiverFK);
     if (user) {
       if (user.socketId) {
@@ -126,11 +146,9 @@ io.on('connection', socket => {
   });
 
   //disconnect
-  socket.on('disconnect', () => {
+  socket.on('logOut', () => {
     console.log('a user disconnected');
     removeUser(socket.id);
     io.emit('getUsers', users);
   });
-  console.log(users);
-  //console.log(socket.id);//Conversations 
 })
