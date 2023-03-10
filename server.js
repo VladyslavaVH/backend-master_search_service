@@ -86,8 +86,16 @@ const io = new Server(server, {
 let users = [];
 
 const sendUser = (userId, socketId) => {
-  !users.some(user => user.userId === userId) &&
-    users.push({userId, socketId});
+  const newUser = { userId, socketId };
+  if (!users.some(user => user.userId === userId)) {
+    users.push(newUser);
+  } else {
+    let tmp = users?.filter(user => user.userId !== userId);
+    tmp.push(newUser);
+
+    users = tmp;
+  }
+    
 };
 
 const checkUserStatus = userId => {
