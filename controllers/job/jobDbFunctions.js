@@ -15,7 +15,9 @@ export async function createJobDB(clientFK, categoryFK, lat, lng, minPayment, ma
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [clientFK, lat, lng, categoryFK, minPayment, maxPayment, currencyFK, jobDateTime, description, qrCode])
     .then(([{ insertId }]) => {
+        console.log('inside database file setting');
         for (const path of files) {
+            console.log(path);
             insertJobPhoto(path, insertId);
         }
     }).then(() => console.log('job created successfully'));

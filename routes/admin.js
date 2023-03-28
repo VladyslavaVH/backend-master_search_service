@@ -20,7 +20,13 @@ router.route('/verify/master', verifyRole(ROLE.ADMIN))
 router.route('/change/faqs', verifyRole(ROLE.ADMIN))
 .post(adminController.changeFaqs);
 
+router.route('/create/faq', verifyRole(ROLE.ADMIN))
+.post(adminController.createFaq);
+
 router.route('/create/new/category', verifyRole(ROLE.ADMIN))
 .post(adminController.createNewCategory);
+
+router.route('/delete/category', verifyRole(ROLE.ADMIN))
+.put(adminController.deleteCategory);
 
 export default router;

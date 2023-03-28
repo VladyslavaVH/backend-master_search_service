@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import fs from 'fs';
 import path, { dirname } from "path";
 import { fileURLToPath } from 'url';
@@ -23,11 +24,14 @@ const createJob = async (req, res) => {
     } else {
       const photos = req.files;
 
-      Object.keys(photos).forEach((key) => {
+      Object.keys(photos).forEach(async (key) => {
+        const newPhotoName = (await bcrypt.hash(photos[key].name, 10)).replaceAll('/', '-').replaceAll('\\', '-').replaceAll('.', '').replaceAll('$', '');
+        const extension = photos[key].name.substr(photos[key].name.lastIndexOf('.'), photos[key].name.length);
+        console.log(`${photos[key].name}: ${newPhotoName + extension}`);
         const filepath = path.join(
           __dirname,
           process.env.JOB_PHOTOS_PATH,
-          photos[key].name
+          newPhotoName + extension
         );
 
         photos[key].mv(filepath, (err) => {
@@ -37,24 +41,25 @@ const createJob = async (req, res) => {
           }
         });
 
-        photosNameArr.push(photos[key].name);
+        photosNameArr.push(newPhotoName + extension);
+        console.log(photosNameArr);
+        console.log('create job in database');
+        //create job in database
+        const jobData = req.body;
+        createJobDB(
+          jobData.clientFK,
+          jobData.categoryFK,
+          jobData.lat,
+          jobData.lng,
+          jobData.minPayment,
+          jobData.maxPayment,
+          jobData.currencyFK,
+          jobData.jobDateTime,
+          jobData.description,
+          photosNameArr
+        );
       });
     }
-
-    //create job in database
-    const jobData = req.body;
-    createJobDB(
-      jobData.clientFK,
-      jobData.categoryFK,
-      jobData.lat,
-      jobData.lng,
-      jobData.minPayment,
-      jobData.maxPayment,
-      jobData.currencyFK,
-      jobData.jobDateTime,
-      jobData.description,
-      photosNameArr
-    );
   } catch (error) {
     console.log(error); 
   }

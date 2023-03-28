@@ -29,3 +29,12 @@ export async function updateAvatar(id, newAvatar) {
 
     return result || {};
 }
+
+export async function getAvatar(id) {
+    const [[result]] = await pool.query(`
+    select avatar 
+    from users
+    where id = ?;`, [id]);
+
+    return result.avatar;
+}

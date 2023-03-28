@@ -75,6 +75,16 @@ export async function getMasterStatisticsDB(id) {
     return statistics || {};
 }
 
+export async function getPermissionCheckDB(id) {
+    const [[permission]] = await pool.query(`
+    select isAdminChecked
+    from masters
+    join masters_documents on masters_documents.user_id = masters.user_id
+    where masters.user_id = ?;`, [id]);
+
+    return permission ? !!+permission.isAdminChecked : false;
+}
+
 export async function applyJobDB(jobId, masterId, proposedPayment, suggestedLeadTime) {
 	await pool.query(`
 	INSERT INTO jobs_candidates (jobFK, masterFK, proposedPayment, executionTime) 
@@ -132,6 +142,15 @@ export async function changeProfileSettingsDB(userId, masterCategories, newTagLi
         }
     });
 }
+
+export async function uploadDocumentsDB(id, passport1, passport2, itn) {
+    await pool.query(`
+    UPDATE masters_documents 
+    SET passportFirstSide = ?, passportSecondSide = ?, individual_tax_number = ? 
+    WHERE user_id = ?;`, [passport1, passport2, itn, id]);
+
+    return { success: true, documents: [passport1, passport2, itn] };
+};
 
 export async function checkJobDB(jobId, masterId) {
     const [[status]] = await pool.query(`

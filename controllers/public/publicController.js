@@ -4,6 +4,7 @@ import {
     getPopularCategoriesDB,
     getOptionCategoriesDB,
     getOptionCurrenciesDB,
+    checkPhoneDB,
     getRecentJobsDB,
     getHighestRatedMastersDB,
     getAllMastersDB,
@@ -23,6 +24,10 @@ const getOptionCategories = async (req, res) => {
 
 const getOptionCurrencies = async (req, res) => {
     res.status(200).send(await getOptionCurrenciesDB() || []);
+};
+
+const checkPhone = async (req, res) => {
+    res.status(200).send(await checkPhoneDB(req.body.phone));
 };
 
 const getRecentJobs = async (req, res) => {
@@ -46,6 +51,7 @@ export default {
     getPopularCategories,
     getOptionCategories,
     getOptionCurrencies,
+    checkPhone,
     getRecentJobs,
     getJobsMastersHighestRated,
     getAllMasters,

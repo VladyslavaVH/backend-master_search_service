@@ -7,7 +7,13 @@ export async function getHomePageStatisticsDB() {
 };
 
 export async function getPopularCategoriesDB() {
-    const [[result]] = await pool.query(`call getPopularCategories()`, []);
+    const [result] = await pool.query(`
+    select categories.*, count(categoryFK) as 'count'
+    from jobs
+    join categories on categoryFK = categories.id
+    group by categoryFK
+    order by count desc
+    limit 8;`, []);
 
     return result || [];
 };
@@ -26,6 +32,15 @@ export async function getOptionCurrenciesDB() {
     from currencies;`, []);
 
     return categories || [];
+};
+
+export async function checkPhoneDB(phone) {
+    const [checkedPhone] = await pool.query(`
+    select phone
+    from users
+    where phone = ?;`, [phone]);
+
+    return checkedPhone.length > 0;
 };
 
 export async function getRecentJobsDB() {

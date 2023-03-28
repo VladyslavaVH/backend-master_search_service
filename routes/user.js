@@ -14,7 +14,7 @@ router.route('/messages')
 
 router.route('/change/avatar',
 filesPayloadExists,
-fileExtLimiter(['.png', '.jpg', '.jpeg']),
+fileExtLimiter(['.png', '.jpg', '.jpeg', '.jfif']),
 fileSizeLimiter)
 .post(userController.changeAvatar);
 

@@ -10,7 +10,7 @@ const router = Router();
 
 router.route('/',
 filesPayloadExists,
-fileExtLimiter(['.png', '.jpg', '.jpeg']),
+fileExtLimiter(['.png', '.jpg', '.jpeg', '.jfif']),
 fileSizeLimiter,
 verifyRole(ROLE.CLIENT)
 )
