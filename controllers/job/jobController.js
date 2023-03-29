@@ -21,13 +21,19 @@ const createJob = async (req, res) => {
     if (!req.files) {
       //return res.status(200).json({ msg: 'no files' });
       console.log("no files");
-    } else {
+      
+    } 
+    else {
       const photos = req.files;
 
-      Object.keys(photos).forEach(async (key) => {
-        const newPhotoName = (await bcrypt.hash(photos[key].name, 10)).replaceAll('/', '-').replaceAll('\\', '-').replaceAll('.', '').replaceAll('$', '');
+      Object.keys(photos).forEach((key) => {
+        let newPhotoName = photos[key].name;
+        let random = Math.floor(Math.random() * 10000);
+        newPhotoName = newPhotoName + random;
+
         const extension = photos[key].name.substr(photos[key].name.lastIndexOf('.'), photos[key].name.length);
         console.log(`${photos[key].name}: ${newPhotoName + extension}`);
+        photosNameArr.push(newPhotoName + extension);
         const filepath = path.join(
           __dirname,
           process.env.JOB_PHOTOS_PATH,
@@ -41,25 +47,29 @@ const createJob = async (req, res) => {
           }
         });
 
-        photosNameArr.push(newPhotoName + extension);
+        //photosNameArr.push(newPhotoName + extension);
         console.log(photosNameArr);
-        console.log('create job in database');
-        //create job in database
-        const jobData = req.body;
-        createJobDB(
-          jobData.clientFK,
-          jobData.categoryFK,
-          jobData.lat,
-          jobData.lng,
-          jobData.minPayment,
-          jobData.maxPayment,
-          jobData.currencyFK,
-          jobData.jobDateTime,
-          jobData.description,
-          photosNameArr
-        );
       });
+
     }
+
+    console.log('create job in database');
+    console.log(photosNameArr)
+    //create job in database
+    const jobData = req.body;
+    createJobDB(
+      jobData.clientFK,
+      jobData.categoryFK,
+      jobData.lat,
+      jobData.lng,
+      jobData.minPayment,
+      jobData.maxPayment,
+      jobData.currencyFK,
+      jobData.jobDateTime,
+      jobData.description,
+      photosNameArr
+    );
+    
   } catch (error) {
     console.log(error); 
   }
