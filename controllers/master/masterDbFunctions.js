@@ -85,11 +85,21 @@ export async function getPermissionCheckDB(id) {
     return permission ? !!+permission.isAdminChecked : false;
 }
 
-export async function applyJobDB(jobId, masterId, proposedPayment, suggestedLeadTime) {
+export async function getAdditionalMasterInfoDB(jobId, masterId) {
+    const [[additionalInfo]] = await pool.query(`
+    select proposedPayment, name as 'currency', currencyFK, executionTime, status
+    from jobs_candidates
+    join currencies on currencies.id = jobs_candidates.currencyFK
+    where jobFK = ? and masterFK = ?;`, [jobId, masterId]);
+
+    return additionalInfo;
+}
+
+export async function applyJobDB(jobId, masterId, proposedPayment, currencyFK, suggestedLeadTime) {
 	await pool.query(`
-	INSERT INTO jobs_candidates (jobFK, masterFK, proposedPayment, executionTime) 
-	VALUES (?, ?, ?, ?);
-	`, [jobId, masterId, proposedPayment, suggestedLeadTime])
+	INSERT INTO jobs_candidates (jobFK, masterFK, proposedPayment, currencyFK, executionTime) 
+	VALUES (?, ?, ?, ?, ?);
+	`, [jobId, masterId, proposedPayment, currencyFK, suggestedLeadTime])
 	.then(() => console.log('successfully applied job'));	
 }
 
@@ -150,6 +160,15 @@ export async function uploadDocumentsDB(id, passport1, passport2, itn) {
     WHERE user_id = ?;`, [passport1, passport2, itn, id]);
 
     return { success: true, documents: [passport1, passport2, itn] };
+};
+
+export async function updateCurrentLocationDB(lat, lng, userId) {
+    await pool.query(`
+    UPDATE masters 
+    SET lat = ?, lng = ? 
+    WHERE user_id = ?;`, [lat, lng, userId]);
+
+    return { success: true };
 };
 
 export async function checkJobDB(jobId, masterId) {

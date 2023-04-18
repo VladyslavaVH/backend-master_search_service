@@ -8,6 +8,9 @@ const router = Router();
 router.route('/statistics', verifyRole(ROLE.MASTER))
 .get(masterController.getMasterStatistics);
 
+router.route('/additional/info', verifyRole(ROLE.CLIENT))
+.get(masterController.getAdditionalMasterInfo);
+
 router.route('/permission/check', verifyRole(ROLE.MASTER))
 .get(masterController.getPermissionCheck);
 
@@ -19,6 +22,9 @@ router.route('/change/profile/settings', verifyRole(ROLE.MASTER))
 
 router.route('/upload/documents', verifyRole(ROLE.MASTER))
 .post(masterController.uploadDocuments);
+
+router.route('/update/current/location', verifyRole(ROLE.MASTER))
+.post(masterController.updateCurrentLocation);
 
 router.route('/check/job/apply', verifyRole(ROLE.MASTER))
 .get(masterController.checkJob);

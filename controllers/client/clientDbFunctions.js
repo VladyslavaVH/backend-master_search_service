@@ -24,7 +24,7 @@ export async function getJobListingByClient(id) {
 
 export async function getAllCandidatesByClient(id) {
     const [candidates] = await pool.query(`
-    select masters.user_id as 'id', jobFK, jobs_candidates.status as 'isConfirmed', firstName, lastName, phone, email, avatar, isAdminChecked as 'isVerified'
+    select masters.user_id as 'id', masters.lat, masters.lng, jobFK, jobs_candidates.status as 'isConfirmed', firstName, lastName, phone, email, avatar, isAdminChecked as 'isVerified'
     from jobs_candidates
     join masters on jobs_candidates.masterFK = masters.user_id
     join users on masters.user_id = users.id

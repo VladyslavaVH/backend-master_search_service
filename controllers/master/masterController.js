@@ -9,10 +9,12 @@ const __dirname = dirname(__filename);
 import { 
   getMasterStatisticsDB,
   getPermissionCheckDB,
+  getAdditionalMasterInfoDB,
   getAllMasterConversationsDB,
   applyJobDB,
   changeProfileSettingsDB,
   uploadDocumentsDB,
+  updateCurrentLocationDB,
   checkJobDB
 } from './masterDbFunctions.js';
 
@@ -24,32 +26,35 @@ const getPermissionCheck = async (req, res) => {
   res.status(200).send(await getPermissionCheckDB(req.user.id));
 }
 
+const getAdditionalMasterInfo = async (req, res) => {
+  res.status(200).send(await getAdditionalMasterInfoDB(req.query.jobId, req.query.masterId));
+}
+
 const getAllMasterConversations = async (req, res) => {
   res.status(200).send(await getAllMasterConversationsDB(req.user.id) || {});
 }
 
 const applyJob = async (req, res) => {
   try {
-    res.status(200).send(await applyJobDB(req.query.jobId, req.body.masterId, req.body.proposedPayment, req.body.suggestedLeadTime) || {});
+    const { proposedPayment, currencyFK, suggestedLeadTime } = req.body;
+    res.status(200).send(await applyJobDB(req.query.jobId, req.user.id, proposedPayment, currencyFK, suggestedLeadTime) || {});
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json(error);
   }  
 }
 
 const changeProfileSettings = async (req, res) => {
   try {
-    console.log(req.body);
     const { masterCategories, newTagLine, newDescription } = req.body;
     res.status(200).send(await changeProfileSettingsDB(req.user.id, masterCategories, newTagLine, newDescription) || {});
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json(error);
   }  
 }
 
 const uploadDocuments = async (req, res) => {
-  console.log('inside upload documents');
   try {
     //upload photos
     if (!req.files) {
@@ -69,7 +74,7 @@ const uploadDocuments = async (req, res) => {
 
       photos['passport1'].mv(photoPath, (err) => {
         if (err) {
-          console.log(err);
+          console.error(err);
           return res.status(500).json({ status: "error", msg: err });
         }
       });
@@ -85,7 +90,7 @@ const uploadDocuments = async (req, res) => {
 
       photos['passport2'].mv(photoPath, (err) => {
         if (err) {
-          console.log(err);
+          console.error(err);
           return res.status(500).json({ status: "error", msg: err });
         }
       });
@@ -101,7 +106,7 @@ const uploadDocuments = async (req, res) => {
 
       photos['itn'].mv(photoPath, (err) => {
         if (err) {
-          console.log(err);
+          console.error(err);
           return res.status(500).json({ status: "error", msg: err });
         }
       });
@@ -110,16 +115,27 @@ const uploadDocuments = async (req, res) => {
       res.status(200).json(await uploadDocumentsDB(req.user.id, passport1, passport2, itn));
     }    
   } catch (error) {
-    console.log(error); 
+    console.error(error); 
     res.status(500).json({ success: false, error});
   }
 };
+
+const updateCurrentLocation = async (req, res) => {
+  try {
+    const { lat, lng } = req.body;
+    res.status(200).json(await updateCurrentLocationDB(lat, lng, req.user.id) || {});
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error)
+  }
+}
 
 const checkJob = async (req, res) => {
   try {
     res.status(200).send(await checkJobDB(req.query.jobId, req.user.id) || {});
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json(error);
   }  
 }
@@ -127,9 +143,11 @@ const checkJob = async (req, res) => {
 export default {
   getMasterStatistics,
   getPermissionCheck,
+  getAdditionalMasterInfo,
   getAllMasterConversations,
   applyJob,
   changeProfileSettings,
   uploadDocuments,
+  updateCurrentLocation,
   checkJob
 };

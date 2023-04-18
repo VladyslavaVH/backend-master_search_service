@@ -359,7 +359,7 @@ const refresh = async (req, res) => {
                     tagLine: foundUser.masterData.tagLine,
                     description: foundUser.masterData.description,
                     location:
-                      foundUser.masterData.lat && user1.masterData.lng
+                      foundUser.masterData.lat && foundUser.masterData.lng
                         ? {
                             lat: foundUser.masterData.lat,
                             lng: foundUser.masterData.lng,
@@ -400,7 +400,7 @@ const refresh = async (req, res) => {
                     tagLine: foundUser.masterData.tagLine,
                     description: foundUser.masterData.description,
                     location:
-                      foundUser.masterData.lat && user1.masterData.lng
+                      foundUser.masterData.lat && foundUser.masterData.lng
                         ? {
                             lat: foundUser.masterData.lat,
                             lng: foundUser.masterData.lng,
