@@ -6,6 +6,15 @@ import userController from '../controllers/user/userController.js';
 
 const router = Router();
 
+router.route('/confirmation')
+.put(userController.sendEmailConfirmation);
+
+// router.route('/update/confirmation')
+// .put(userController.updateEmailConfirmStatus);
+
+router.route('/info')
+.get(userController.getInfo);
+
 router.route('/notifications')
 .get(userController.getNotifications);
 

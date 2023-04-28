@@ -3,6 +3,7 @@ import publicController from '../controllers/public/publicController.js';
 
 const router = Router();
 
+router.route('/update/confirmation').put(publicController.updateEmailConfirmStatus);
 router.route('/home/statistics').get(publicController.getHomePageStatistics);
 router.route('/popular/categories').get(publicController.getPopularCategories);
 router.route('/option/categories').get(publicController.getOptionCategories);

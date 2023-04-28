@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { 
+    updateEmailConfirmStatusDB,
     getHomePageStatisticsDB,
     getPopularCategoriesDB,
     getOptionCategoriesDB,
@@ -9,6 +10,16 @@ import {
     getHighestRatedMastersDB,
     getAllMastersDB,
 } from './publicDbFunctions.js';
+
+const updateEmailConfirmStatus = async (req, res) => {
+    const { email, id, token } = req.body;
+    try {
+      await updateEmailConfirmStatusDB(email, id, token);
+      res.status(200).json({ success: true, message: "Confirmation updated successfully!" });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error });
+    }
+  };
 
 const getHomePageStatistics = async (req, res) => {
     res.status(200).send(await getHomePageStatisticsDB() || { jobsCount: 0, usersCount: 0 });
@@ -47,6 +58,7 @@ const getFaqs = async (req, res) => {
 };
 
 export default {
+    updateEmailConfirmStatus,
     getHomePageStatistics,
     getPopularCategories,
     getOptionCategories,

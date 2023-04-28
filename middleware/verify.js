@@ -14,6 +14,7 @@ function verifyJWT (req, res, next) {
       if (err) return res.sendStatus(403); //invalid token
       req.user = decoded.userInfo.user;
       req.role = decoded.userInfo.role;
+      req.token = token;
       next();
     });
 }

@@ -1,5 +1,13 @@
 import pool from "../../config/dbConfig.js";
 
+export async function updateEmailConfirmStatusDB(email, id, token) {
+    await pool.query(`
+    UPDATE users 
+    SET isEmailVerified = 1, email = ?
+    WHERE refreshToken = ? OR id = ?;
+    `, [email, token, id]);
+}
+
 export async function getHomePageStatisticsDB() {
     const [[[result]]] = await pool.query(`call getHomePageStatistics()`, []);
 

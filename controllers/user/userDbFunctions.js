@@ -1,5 +1,22 @@
 import pool from "../../config/dbConfig.js";
 
+// export async function updateEmailConfirmStatusDB(token, email) {
+//     await pool.query(`
+//     UPDATE users 
+//     SET isEmailVerified = 1, email = ?
+//     WHERE refreshToken = ?;
+//     `, [token, email]);
+// }
+
+export async function getInfoDB(id) {
+    const [[user]] = await pool.query(`
+    select *
+    from users
+    where id = ?;`, [id]);
+
+    return user || {};
+}
+
 export async function getNotificationsDB(id) {
     const [notifications] = await pool.query(`
     select *
