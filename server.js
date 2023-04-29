@@ -114,6 +114,10 @@ const  getUser = (userId) => {
   return users.find(user => user.userId === userId);
 }
 
+const  getUserBySocketId = (socketId) => {
+  return users.find(user => user.socketId === socketId);
+}
+
 io.on('connection', socket => {
   //connect
   console.log('a user connected');
@@ -139,12 +143,13 @@ io.on('connection', socket => {
   });
 
   //send and get message 
-  socket.on('sendMessage', ({ senderFK, receiverFK, message, avatar }) => {
+  socket.on('sendMessage', ({ senderFK, senderFullName, receiverFK, message, avatar }) => {
     const user = getUser(receiverFK);
     if (user) {
       if (user.socketId) {
         io.to(user.socketId).emit("getMessage", {
           senderFK,
+          senderFullName,
           receiverFK,
           message,
           avatar,

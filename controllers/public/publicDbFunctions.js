@@ -52,7 +52,16 @@ export async function checkPhoneDB(phone) {
 };
 
 export async function getRecentJobsDB() {
-    const [[result]] = await pool.query(`call getRecentJobs()`, []);
+    const [result] = await pool.query(`
+    select distinct jobs.id, categories.name as 'category', jobs.lat, jobs.lng, jobs.minPayment, jobs.maxPayment, currencies.name as 'currency', jobs.description, users.firstName as 'clientName', DATEDIFF(date(now()), date(jobs.createTime)) as 'days', jobs.createTime as 'createTime'
+    from jobs
+    join categories on jobs.categoryFK = categories.id
+    join users on jobs.clientFK = users.id
+    join currencies on jobs.currencyFK = currencies.id
+    join jobs_candidates on jobs_candidates.jobFK = jobs.id
+    where jobs_candidates.status = 0
+    order by jobs.createTime desc
+    limit 5;`, []);
 
     return result || [];
 };
