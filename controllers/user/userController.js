@@ -24,7 +24,8 @@ const sendEmailConfirmation = async (req, res) => {
   const emailtoken = req.token;
   const id = req.user.id;
 
-  const confirmUrl = `${process.env.FRONTEND_URL}/confirmation/${emailtoken}/${id}/${email}`;
+  //FRONTEND_URL
+  const confirmUrl = `${process.env.ORIGIN_URL}/confirmation/${emailtoken}/${id}/${email}`;
 
   const mailOptions = {
     from: process.env.COMPANY_EMAIL,
