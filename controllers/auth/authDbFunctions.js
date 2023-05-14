@@ -36,8 +36,6 @@ export async function createDefaultMaster(firstName, lastName, phone, password, 
     return id;
 };
 
-//console.log(await createDefaultMaster('firstName', 'lastName', '+380...', 'password'));
-
 export async function findUser(id) {
     const res = await pool.query(`
     SELECT users.id, firstName, lastName, roles.name as 'role', avatar, phone, isPhoneVerified, refreshToken, email, isEmailVerified, createTime, password, refreshToken  
@@ -68,7 +66,6 @@ export async function getMasterData(id) {
     const [[masterData]] = await pool.query(`
     select * 
     from masters
-    left join countries on masters.nationalityFK = countries.id
     where user_id = ?;`, [id]);
 
     return masterData;
@@ -116,6 +113,15 @@ export async function updateRefreshToken(id, refreshToken) {
     UPDATE users 
     SET refreshToken = ?
     WHERE id = ?`, [refreshToken, id]);
+
+    return result;
+}
+
+export async function updatePassword(hashedPassword, phone) {
+    const [result] = await pool.query(`
+    UPDATE users 
+    SET password = ? 
+    WHERE phone = ?;`, [hashedPassword, phone]);
 
     return result;
 }

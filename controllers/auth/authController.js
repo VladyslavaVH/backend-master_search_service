@@ -5,12 +5,11 @@ import {
   createDefaultMaster,
   findUser,
   findUserByPhone,
+  updatePassword,
   updateRefreshToken,
   deleteRefreshToken,
   getUserByRefreshToken,
 } from "./authDbFunctions.js";
-
-//console.log(await bcrypt.hash('admin', 10));
 
 import dotenv from "dotenv";
 import ROLE from "./../../config/roles.js";
@@ -89,13 +88,6 @@ const generateAccessToken = async (userId) => {
                           lng: user1.masterData.lng,
                         }
                       : null,
-                  nationality: user1.masterData.id
-                    ? {
-                        id: user1.masterData.id,
-                        country: user1.masterData.country,
-                        flag: user1.masterData.flag,
-                      }
-                    : null,
                 }
               : null,
         },
@@ -130,13 +122,6 @@ const generateAccessToken = async (userId) => {
                           lng: user1.masterData.lng,
                         }
                       : null,
-                  nationality: user1.masterData.id
-                    ? {
-                        id: user1.masterData.id,
-                        country: user1.masterData.country,
-                        flag: user1.masterData.flag,
-                      }
-                    : null,
                 }
               : null,
         },
@@ -151,6 +136,18 @@ const generateAccessToken = async (userId) => {
 
   return { newRefreshToken, accessToken };
 };
+
+const resetPassword = async (req, res) => {
+  try {
+    const { newPassword, phone } = req.body;
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await updatePassword(hashedPassword, phone);
+    
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
 
 const login = async (req, res) => {
   const cookies = req.cookies;
@@ -191,13 +188,6 @@ const login = async (req, res) => {
                               lng: user1.masterData.lng,
                             }
                           : null,
-                      nationality: user1.masterData.id
-                        ? {
-                            id: user1.masterData.id,
-                            country: user1.masterData.country,
-                            flag: user1.masterData.flag,
-                          }
-                        : null,
                     }
                   : null,
             },
@@ -232,13 +222,6 @@ const login = async (req, res) => {
                               lng: user1.masterData.lng,
                             }
                           : null,
-                      nationality: user1.masterData.id
-                        ? {
-                            id: user1.masterData.id,
-                            country: user1.masterData.country,
-                            flag: user1.masterData.flag,
-                          }
-                        : null,
                     }
                   : null,
             },
@@ -365,13 +348,6 @@ const refresh = async (req, res) => {
                             lng: foundUser.masterData.lng,
                           }
                         : null,
-                    nationality: foundUser.masterData.id
-                      ? {
-                          id: foundUser.masterData.id,
-                          country: foundUser.masterData.country,
-                          flag: foundUser.masterData.flag,
-                        }
-                      : null,
                   }
                 : null,
           },
@@ -406,13 +382,6 @@ const refresh = async (req, res) => {
                             lng: foundUser.masterData.lng,
                           }
                         : null,
-                    nationality: foundUser.masterData.id
-                      ? {
-                          id: foundUser.masterData.id,
-                          country: foundUser.masterData.country,
-                          flag: foundUser.masterData.flag,
-                        }
-                      : null,
                   }
                 : null,
           },
@@ -468,6 +437,7 @@ const logout = async (req, res) => {
 
 export default {
   register,
+  resetPassword,
   login,
   refresh,
   logout,

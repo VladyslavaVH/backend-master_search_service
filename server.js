@@ -98,25 +98,11 @@ const sendUser = (userId, socketId) => {
     
 };
 
-const checkUserStatus = userId => {
-  if (users.find(user => user.userId === userId)) {
-    return userId;
-  } else {
-    return null;
-  }
-};
+const checkUserStatus = userId => users.find(user => user.userId === userId) ? userId : null;
 
-const removeUser = (socketId) => {
-  users = users.filter(user => user.socketId !== socketId);
-}
+const removeUser = socketId => users = users.filter(user => user.socketId !== socketId);
 
-const  getUser = (userId) => {
-  return users.find(user => user.userId === userId);
-}
-
-const  getUserBySocketId = (socketId) => {
-  return users.find(user => user.socketId === socketId);
-}
+const  getUser = userId => users.find(user => user.userId === userId);
 
 io.on('connection', socket => {
   //connect
