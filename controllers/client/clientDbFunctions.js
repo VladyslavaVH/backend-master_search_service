@@ -7,7 +7,7 @@ export async function getJobListingByClient(id) {
     JOIN categories on jobs.categoryFK = categories.id
     WHERE jobs.clientFK = ? 
     AND jobs.isDone = false
-    ORDER BY (jobDateTime) desc;`, [id]);
+    ORDER BY createTime desc;`, [id]);
 
     const [candidates] = await pool.query(`
     select masters.user_id as 'id', jobFK, jobs_candidates.status as 'isConfirmed', firstName, lastName, phone, email, avatar, isAdminChecked as 'isVerified'

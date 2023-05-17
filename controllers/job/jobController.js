@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import fs from 'fs';
 import path, { dirname } from "path";
 import { fileURLToPath } from 'url';
