@@ -9,12 +9,32 @@ import pool from "../../config/dbConfig.js";
 // }
 
 export async function getInfoDB(id) {
-    const [[user]] = await pool.query(`
-    select *
+    const userInfo = await pool.query(`
+    select users.*, masters.* 
     from users
-    where id = ?;`, [id]);
+    left join masters on masters.user_id = users.id
+    left join categories_masters on categories_masters.masterFK = masters.user_id
+    where id = ?;`, [id])
+    .then(async ([[user]]) => {
+        const [categories] = await pool.query(`
+        select categories.id, categories.name as 'category', categories.description 
+        from users
+        left join masters on masters.user_id = users.id
+        left join categories_masters on categories_masters.masterFK = masters.user_id
+        join categories on categories.id = categories_masters.categoryFK
+        where masters.user_id = ?;`, [user.id]);
 
-    return user || {};
+        let info = { ...user, masterInfo: { categories, description: user.description, tagLine: user.tagLine } };
+        delete info.password;
+        delete info.refreshToken;
+        delete info.user_id;
+        delete info.tagLine;
+        delete info.description;
+
+        return info;
+    });
+
+    return userInfo || {};
 }
 
 export async function getNotificationsDB(id) {
